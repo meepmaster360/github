@@ -1,40 +1,37 @@
-Notas Importantes
+"Notas Importantes
 
 1 Substitua as Unidades: Ajuste as unidades na variável unidades conforme necessário. Adicione ou remova unidades dependendo do seu sistema.
 2 Letra da Unidade USB: Certifique-se de substituir /mnt/f pela letra correta da sua unidade USB nos caminhos destino_imagens, destino_videos, e destino_documentos.
 3 Espaço no USB: Verifique se há espaço suficiente na unidade USB para armazenar todas as cópias dos arquivos.
 4 Permissões de Acesso: Certifique-se de que o Git Bash tenha permissão para acessar todas as pastas dos discos especificados.
 
-Explicação
+Explicação Detalhada
+Definir extensões de arquivos:
 
-Extensões de Arquivos: O script define arrays com as extensões comuns de arquivos de imagem, vídeo e documentos.
-Função copiar_arquivos: Esta função pesquisa e copia arquivos com as extensões especificadas de uma unidade para o diretório de destino na unidade USB.
-Loop para Unidades e Tipos de Arquivos: O script itera sobre todas as unidades especificadas, chamando a função copiar_arquivos para cada tipo de arquivo (imagens, vídeos e documentos) e copiando-os para seus respectivos diretórios na unidade USB.
-Este script irá percorrer as unidades especificadas, encontrar todos os arquivos de imagem, vídeo e documentos com as extensões definidas, e copiá-los para diretórios separados na unidade USB.
+Criamos listas de extensões para imagens, vídeos e documentos.
+Definir diretórios para pesquisar:
 
-Explicação do Script
-Shebang: #!/bin/bash
+Listamos as unidades onde vamos procurar os arquivos.
+Definir diretórios de destino na unidade USB:
 
-Indica que este script deve ser executado usando o interpretador bash.
-Definindo extensões de arquivos:
+Especificamos onde os arquivos serão copiados na unidade USB.
+Criar os diretórios de destino se não existirem:
 
-Listas de extensões de arquivos para imagens, vídeos e documentos.
-Diretórios para pesquisar:
+mkdir -p cria os diretórios especificados se eles ainda não existirem.
+Função para copiar arquivos:
 
-Unidades onde os arquivos serão pesquisados. Substitua /mnt/disk1, /mnt/disk2, etc., pelos pontos de montagem corretos das suas unidades.
-Diretórios de destino:
+copiar_arquivos é uma função que recebe a unidade, extensões e o destino.
+local unidade=$1 define a unidade a ser pesquisada.
+shift remove o primeiro argumento (a unidade) do array de argumentos.
+local extensoes=("$@") armazena as extensões de arquivos.
+local destino=${extensoes[-1]} pega o último argumento (o destino) do array de extensões.
+unset extensoes[-1] remove o destino do array de extensões.
+Procurar e copiar arquivos:
 
-Diretórios na unidade USB onde os arquivos serão copiados. Substitua /media/usb pelo ponto de montagem correto da sua unidade USB.
-Criando diretórios de destino:
+Para cada extensão, usamos find para localizar arquivos e cp para copiá-los para o destino.
+Executar a função para cada unidade e tipo de arquivo:
 
-mkdir -p cria os diretórios de destino se eles não existirem.
-Função copiar_arquivos:
-
-Recebe como argumentos a unidade, extensões de arquivos e o diretório de destino.
-Usa find para procurar arquivos com as extensões especificadas e cp para copiá-los para o destino.
-Executando a função:
-
-Para cada unidade, chama copiar_arquivos para imagens, vídeos e documentos.
+Para cada unidade, chamamos copiar_arquivos para imagens, vídeos e documentos.
 Mensagem de conclusão:
 
-Imprime uma mensagem indicando que a cópia foi concluída.
+Imprimimos uma mensagem indicando que a cópia foi concluída."
