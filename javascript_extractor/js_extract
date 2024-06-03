@@ -1,1 +1,53 @@
+const fs = require('fs');
+const path = require('path');
+const glob = require('glob');
+
+// Extensões de arquivos
+const extensoesImagens = ['**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.bmp', '**/*.tiff'];
+const extensoesVideos = ['**/*.mp4', '**/*.avi', '**/*.mov', '**/*.mkv', '**/*.wmv', '**/*.flv'];
+const extensoesDocumentos = ['**/*.txt', '**/*.pdf', '**/*.doc', '**/*.docx', '**/*.xls', '**/*.xlsx', '**/*.ppt', '**/*.pptx'];
+
+// Diretórios para pesquisar (substitua conforme necessário)
+const unidades = ['C:\\', 'D:\\', 'E:\\'];  // Adicione ou remova unidades conforme necessário
+
+// Diretórios de destino na unidade USB (substitua 'F:' pela letra correta da unidade USB)
+const destinoImagens = 'F:\\imagens';
+const destinoVideos = 'F:\\videos';
+const destinoDocumentos = 'F:\\documentos';
+
+// Cria os diretórios de destino se não existirem
+if (!fs.existsSync(destinoImagens)) fs.mkdirSync(destinoImagens, { recursive: true });
+if (!fs.existsSync(destinoVideos)) fs.mkdirSync(destinoVideos, { recursive: true });
+if (!fs.existsSync(destinoDocumentos)) fs.mkdirSync(destinoDocumentos, { recursive: true });
+
+// Função para copiar arquivos
+const copiarArquivos = (unidade, extensoes, destino) => {
+    extensoes.forEach(ext => {
+        glob(path.join(unidade, ext), (err, files) => {
+            if (err) {
+                console.error(`Erro ao procurar arquivos: ${err}`);
+                return;
+            }
+            files.forEach(file => {
+                const destinoCompleto = path.join(destino, path.basename(file));
+                fs.copyFile(file, destinoCompleto, err => {
+                    if (err) {
+                        console.error(`Erro ao copiar ${file}: ${err}`);
+                    } else {
+                        console.log(`Copiado: ${file} para ${destinoCompleto}`);
+                    }
+                });
+            });
+        });
+    });
+};
+
+// Executar a função para cada unidade e tipo de arquivo
+unidades.forEach(unidade => {
+    copiarArquivos(unidade, extensoesImagens, destinoImagens);
+    copiarArquivos(unidade, extensoesVideos, destinoVideos);
+    copiarArquivos(unidade, extensoesDocumentos, destinoDocumentos);
+});
+
+console.log("Cópia de arquivos de mídia e documentos concluída.");
 
