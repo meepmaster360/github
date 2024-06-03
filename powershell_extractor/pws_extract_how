@@ -1,0 +1,24 @@
+Passo 2: Executar o Script
+Abra o PowerShell como Administrador:
+
+Clique com o botão direito no menu Iniciar e selecione "Windows PowerShell (Admin)" ou "PowerShell (Admin)".
+Navegue até o diretório onde o script está salvo:
+
+powershell
+Copiar código
+cd "C:\caminho\para\o\script"
+Execute o script:
+
+powershell
+Copiar código
+.\copiar_midias.ps1
+Notas Importantes
+Substitua as Unidades: Ajuste as unidades na variável $unidades conforme necessário. Adicione ou remova unidades dependendo do seu sistema.
+Letra da Unidade USB: Certifique-se de substituir "F:" pela letra correta da sua unidade USB nos caminhos $destinoImagens, $destinoVideos, e $destinoDocumentos.
+Espaço no USB: Verifique se há espaço suficiente na unidade USB para armazenar todas as cópias dos arquivos.
+Permissões de Acesso: Execute o PowerShell como Administrador para garantir que você tenha permissões para acessar todas as pastas e copiar arquivos.
+Explicação
+Extensões de Arquivos: O script define arrays com as extensões comuns de arquivos de imagem, vídeo e documentos.
+Função Copiar-Arquivos: Esta função pesquisa e copia arquivos com as extensões especificadas de uma unidade para o diretório de destino na unidade USB.
+Loop para Unidades e Tipos de Arquivos: O script itera sobre todas as unidades especificadas, chamando a função Copiar-Arquivos para cada tipo de arquivo (imagens, vídeos e documentos) e copiando-os para seus respectivos diretórios na unidade USB.
+Este script irá percorrer as unidades especificadas, encontrar todos os arquivos de imagem, vídeo e documentos com as extensões definidas, e copiá-los para diretórios separados na unidade USB.
