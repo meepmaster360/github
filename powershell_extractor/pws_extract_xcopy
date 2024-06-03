@@ -1,1 +1,40 @@
+# Extensões de arquivos
+$extensoesImagens = @("*.jpg", "*.jpeg", "*.png", "*.gif", "*.bmp", "*.tiff")
+$extensoesVideos = @("*.mp4", "*.avi", "*.mov", "*.mkv", "*.wmv", "*.flv")
+$extensoesDocumentos = @("*.txt", "*.pdf", "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx")
+
+# Diretórios para pesquisar (substitua conforme necessário)
+$unidades = @("C:\", "D:\", "E:\")  # Adicione ou remova unidades conforme necessário
+
+# Diretórios de destino na unidade USB (substitua 'F:' pela letra correta da unidade USB)
+$destinoImagens = "F:\imagens"
+$destinoVideos = "F:\videos"
+$destinoDocumentos = "F:\documentos"
+
+# Cria os diretórios de destino se não existirem
+New-Item -Path $destinoImagens -ItemType Directory -Force
+New-Item -Path $destinoVideos -ItemType Directory -Force
+New-Item -Path $destinoDocumentos -ItemType Directory -Force
+
+# Função para copiar arquivos usando xcopy
+function Copiar-Arquivos {
+    param (
+        [string]$unidade,
+        [string[]]$extensoes,
+        [string]$destino
+    )
+
+    foreach ($extensao in $extensoes) {
+        Start-Process -NoNewWindow -FilePath "xcopy" -ArgumentList "/S /Y", "$unidade\$extensao", "$destino"
+    }
+}
+
+# Executar a função para cada unidade e tipo de arquivo
+foreach ($unidade in $unidades) {
+    Copiar-Arquivos -unidade $unidade -extensoes $extensoesImagens -destino $destinoImagens
+    Copiar-Arquivos -unidade $unidade -extensoes $extensoesVideos -destino $destinoVideos
+    Copiar-Arquivos -unidade $unidade -extensoes $extensoesDocumentos -destino $destinoDocumentos
+}
+
+Write-Output "Cópia de arquivos de mídia e documentos concluída."
 
