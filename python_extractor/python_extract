@@ -1,1 +1,40 @@
+import os
+import shutil
+import glob
+
+# Extensões de arquivos
+extensoes_imagens = ["*.jpg", "*.jpeg", "*.png", "*.gif", "*.bmp", "*.tiff"]
+extensoes_videos = ["*.mp4", "*.avi", "*.mov", "*.mkv", "*.wmv", "*.flv"]
+extensoes_documentos = ["*.txt", "*.pdf", "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx"]
+
+# Diretórios para pesquisar (substitua conforme necessário)
+unidades = ["C:\\", "D:\\", "E:\\"]  # Adicione ou remova unidades conforme necessário
+
+# Diretórios de destino na unidade USB (substitua 'F:' pela letra correta da unidade USB)
+destino_imagens = "F:\\imagens"
+destino_videos = "F:\\videos"
+destino_documentos = "F:\\documentos"
+
+# Cria os diretórios de destino se não existirem
+os.makedirs(destino_imagens, exist_ok=True)
+os.makedirs(destino_videos, exist_ok=True)
+os.makedirs(destino_documentos, exist_ok=True)
+
+# Função para copiar arquivos
+def copiar_arquivos(unidade, extensoes, destino):
+    for ext in extensoes:
+        for file in glob.glob(os.path.join(unidade, '**', ext), recursive=True):
+            try:
+                shutil.copy(file, destino)
+                print(f"Copiado: {file} para {destino}")
+            except Exception as e:
+                print(f"Erro ao copiar {file}: {e}")
+
+# Executar a função para cada unidade e tipo de arquivo
+for unidade in unidades:
+    copiar_arquivos(unidade, extensoes_imagens, destino_imagens)
+    copiar_arquivos(unidade, extensoes_videos, destino_videos)
+    copiar_arquivos(unidade, extensoes_documentos, destino_documentos)
+
+print("Cópia de arquivos de mídia e documentos concluída.")
 
