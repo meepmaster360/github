@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Definir extensões de arquivos
+imagens=("*.jpg" "*.jpeg" "*.png" "*.gif" "*.bmp" "*.tiff")
+videos=("*.mp4" "*.avi" "*.mov" "*.mkv" "*.wmv" "*.flv")
+documentos=("*.txt" "*.pdf" "*.doc" "*.docx" "*.xls" "*.xlsx" "*.ppt" "*.pptx")
+
+# Diretórios para pesquisar (substitua conforme necessário)
+unidades=("/mnt/c" "/mnt/d" "/mnt/e")
+
+# Diretórios de destino na unidade USB (substitua 'f' pela letra correta da unidade USB)
+destino_base="/mnt/f"
+destino_imagens="$destino_base/imagens"
+destino_videos="$destino_base/videos"
+destino_documentos="$destino_base/documentos"
+
+# Criar os diretórios de destino se não existirem
+mkdir -p "$destino_imagens"
+mkdir -p "$destino_videos"
+mkdir -p "$destino_documentos"
+
+# Função para copiar arquivos
+copiar_arquivos() {
+    local unidade=$1
+    local extensoes=("${!2}")
+    local destino=$3
+
+    for ext in "${extensoes[@]}"; do
+        find "$unidade" -type f -iname "$ext" -exec cp "{}" "$destino" \;
+    done
+}
+
+# Executar a função para cada unidade e tipo de arquivo
+for unidade in "${unidades[@]}"; do
+    copiar_arquivos "$unidade" imagens[@] "$destino_imagens"
+    copiar_arquivos "$unidade" videos[@] "$destino_videos"
+    copiar_arquivos "$unidade" documentos[@] "$destino_documentos"
+done
+
+echo "Cópia de arquivos de mídia e documentos concluída."

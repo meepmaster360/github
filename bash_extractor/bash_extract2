@@ -1,0 +1,94 @@
+#!/bin/bash
+
+# Passo 1: Definir extensões de arquivos
+# Criamos listas com as extensões de arquivos que queremos copiar.
+# Cada tipo de arquivo tem sua própria lista.
+
+# Lista de extensões para imagens
+imagens=("*.jpg" "*.jpeg" "*.png" "*.gif" "*.bmp" "*.tiff")
+
+# Lista de extensões para vídeos
+videos=("*.mp4" "*.avi" "*.mov" "*.mkv" "*.wmv" "*.flv")
+
+# Lista de extensões para documentos
+documentos=("*.txt" "*.pdf" "*.doc" "*.docx" "*.xls" "*.xlsx" "*.ppt" "*.pptx")
+
+# Passo 2: Definir diretórios para pesquisar
+# Aqui definimos as unidades onde vamos procurar os arquivos.
+# Substitua "/mnt/c", "/mnt/d", "/mnt/e" pelos caminhos reais das suas unidades.
+
+unidades=("/mnt/c" "/mnt/d" "/mnt/e")
+
+# Passo 3: Definir diretórios de destino na unidade USB
+# Definimos os diretórios de destino na unidade USB.
+# Substitua "/mnt/f" pelo ponto de montagem correto da sua unidade USB.
+
+destino_base="/mnt/f"
+
+# Diretório para imagens na unidade USB
+destino_imagens="$destino_base/imagens"
+
+# Diretório para vídeos na unidade USB
+destino_videos="$destino_base/videos"
+
+# Diretório para documentos na unidade USB
+destino_documentos="$destino_base/documentos"
+
+# Passo 4: Criar os diretórios de destino se não existirem
+# mkdir -p cria os diretórios especificados, se ainda não existirem.
+# Isso garante que os diretórios de destino estarão prontos para receber os arquivos.
+
+echo "Criando diretórios de destino..."
+mkdir -p "$destino_imagens"
+mkdir -p "$destino_videos"
+mkdir -p "$destino_documentos"
+echo "Diretórios de destino criados."
+
+# Passo 5: Função para copiar arquivos
+# Definimos uma função chamada copiar_arquivos.
+# Esta função recebe três argumentos: a unidade, a lista de extensões e o diretório de destino.
+
+copiar_arquivos() {
+    # Primeiro argumento: unidade para pesquisar
+    unidade=$1
+
+    # Segundo argumento: lista de extensões de arquivos (passada como array)
+    extensoes=("${!2}")
+
+    # Terceiro argumento: diretório de destino
+    destino=$3
+
+    # Percorremos cada extensão na lista
+    for ext in "${extensoes[@]}"; do
+        # Exibimos uma mensagem indicando a extensão que estamos procurando
+        echo "Procurando arquivos com extensão $ext em $unidade..."
+
+        # Usamos find para procurar arquivos com a extensão especificada e cp para copiá-los
+        find "$unidade" -type f -iname "$ext" -exec cp "{}" "$destino" \;
+    done
+}
+
+# Passo 6: Executar a função para cada unidade e tipo de arquivo
+# Iteramos sobre cada unidade definida no array unidades.
+# Para cada unidade, chamamos a função copiar_arquivos para imagens, vídeos e documentos.
+
+for unidade in "${unidades[@]}"; do
+    echo "Processando unidade $unidade..."
+
+    # Chamamos copiar_arquivos para a unidade atual e a lista de imagens
+    copiar_arquivos "$unidade" imagens[@] "$destino_imagens"
+
+    # Chamamos copiar_arquivos para a unidade atual e a lista de vídeos
+    copiar_arquivos "$unidade" videos[@] "$destino_videos"
+
+    # Chamamos copiar_arquivos para a unidade atual e a lista de documentos
+    copiar_arquivos "$unidade" documentos[@] "$destino_documentos"
+
+    echo "Unidade $unidade processada."
+done
+
+# Passo 7: Mensagem de conclusão
+# Imprimimos uma mensagem indicando que a cópia foi concluída.
+
+echo "Cópia de arquivos de mídia e documentos concluída."
+
