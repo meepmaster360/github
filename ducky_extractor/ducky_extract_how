@@ -1,0 +1,34 @@
+Para criar um script DuckyScript que copia arquivos de várias extensões de várias unidades para outra unidade USB usando o USB Rubber Ducky, você pode seguir o exemplo abaixo. Esse script assume que você está em um ambiente Windows e que o USB Rubber Ducky está configurado para emular um teclado. Ele simulará a digitação de comandos no PowerShell para realizar a tarefa.
+
+Preparação
+Identificar as unidades: Determine as letras das unidades de origem (por exemplo, C:, D:, E:) e a unidade de destino (por exemplo, F: para o USB de destino).
+Instalar DuckEncoder: Certifique-se de ter o DuckEncoder para converter o script .txt em um payload .bin.
+DuckyScript
+Crie um arquivo chamado copy_files.txt com o seguinte conteúdo:
+
+####
+
+Explicação do Script
+DELAY 5000: Aguarda 5 segundos para garantir que o sistema esteja pronto.
+GUI r: Pressiona Win + R para abrir a janela "Executar".
+STRING powershell: Digita powershell para abrir o PowerShell.
+ENTER: Pressiona Enter para executar o comando.
+DELAY 1000: Aguarda 1 segundo para garantir que o PowerShell esteja aberto.
+Definir variáveis no PowerShell: Define as variáveis $usbPath, $srcDrives, $imgExtensions, $vidExtensions, $docExtensions, $imgDest, $vidDest, $docDest.
+Criar diretórios de destino: New-Item -ItemType Directory -Force -Path $imgDest, $vidDest, $docDest cria os diretórios necessários.
+Copiar arquivos: foreach loops percorrem os drives e extensões e copiam os arquivos para os destinos correspondentes.
+Mensagem de conclusão: Exibe uma mensagem indicando que a cópia foi concluída.
+Como Usar
+Escreva o script em um arquivo de texto: Salve o conteúdo acima como copy_files.txt.
+Converta o script para um payload binário usando o DuckEncoder:
+bash
+Copiar código
+java -jar duckencoder.jar -i copy_files.txt -o inject.bin
+Carregue o payload no USB Rubber Ducky:
+Copie o arquivo inject.bin para o USB Rubber Ducky.
+Insira o USB Rubber Ducky no computador:
+O script será executado automaticamente, abrindo o PowerShell e copiando os arquivos especificados para a unidade USB de destino.
+Nota
+Permissões: Certifique-se de que o usuário tem permissões adequadas para acessar os drives e copiar os arquivos.
+Erros Silenciosos: O script está configurado para ignorar erros silenciosamente (-ErrorAction SilentlyContinue), mas você pode ajustar isso conforme necessário.
+Atrasos: Ajuste os valores de DELAY conforme necessário para garantir que o script funcione corretamente no seu ambiente específico.

