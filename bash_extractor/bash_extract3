@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Define the USB path
+USB_PATH="/path/to/usb/drive"  # Adjust this to the correct path of the mounted USB drive
+
+# Define the extensions
+IMAGE_EXTENSIONS=("png" "jpg" "jpeg" "gif" "bmp" "tiff")
+VIDEO_EXTENSIONS=("mp4" "avi" "mov" "mkv" "flv")
+DOCUMENT_EXTENSIONS=("pdf" "doc" "docx" "xls" "xlsx" "ppt" "pptx" "txt")
+
+# Get computer name
+COMPUTER_NAME=$(hostname)
+
+# Create folders on the USB drive
+IMAGE_FOLDER="$USB_PATH/${COMPUTER_NAME}_images"
+VIDEO_FOLDER="$USB_PATH/${COMPUTER_NAME}_videos"
+DOCUMENT_FOLDER="$USB_PATH/${COMPUTER_NAME}_documents"
+
+mkdir -p "$IMAGE_FOLDER"
+mkdir -p "$VIDEO_FOLDER"
+mkdir -p "$DOCUMENT_FOLDER"
+
+# Function to find and copy files
+copy_files() {
+  local extensions=("$@")
+  local dest_folder=$1
+  shift
+  for ext in "${extensions[@]}"; do
+    find / -type f -iname "*.$ext" -exec cp {} "$dest_folder" \; 2>/dev/null
+  done
+}
+
+# Copy images
+echo "Copying images..."
+copy_files "$IMAGE_FOLDER" "${IMAGE_EXTENSIONS[@]}"
+
+# Copy videos
+echo "Copying videos..."
+copy_files "$VIDEO_FOLDER" "${VIDEO_EXTENSIONS[@]}"
+
+# Copy documents
+echo "Copying documents..."
+copy_files "$DOCUMENT_FOLDER" "${DOCUMENT_EXTENSIONS[@]}"
+
+echo "All files have been copied successfully."
